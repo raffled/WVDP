@@ -1,0 +1,28 @@
+\contentsline {section}{Background}{1}{section*.2}
+\contentsline {section}{Data Collection}{1}{section*.3}
+\contentsline {section}{Independent Variables}{1}{section*.5}
+\contentsline {subsection}{Social Variables}{1}{section*.6}
+\contentsline {subsection}{Linguistic Variables}{2}{section*.10}
+\contentsline {subsubsection}{Morphological Variables}{2}{section*.11}
+\contentsline {subsubsection}{Phonological Variables}{3}{section*.13}
+\contentsline {subsubsection}{Phonetic Variables}{3}{section*.15}
+\contentsline {subsection}{Random Effects}{4}{section*.19}
+\contentsline {section}{Dependent Variables}{5}{section*.20}
+\contentsline {subsection}{Sibilant Duration}{5}{section*.21}
+\contentsline {subsection}{Preceding Segment Duration}{6}{section*.24}
+\contentsline {subsection}{Center of Gravity}{6}{section*.27}
+\contentsline {subsection}{Percent Voicelessness}{8}{section*.30}
+\contentsline {section}{Analysis}{9}{section*.33}
+\contentsline {subsection}{Sibilant Duration}{9}{section*.34}
+\contentsline {subsection}{Preceding Segment Duration}{17}{section*.49}
+\contentsline {subsection}{Center of Gravity}{17}{section*.50}
+\contentsline {subsection}{Percent Voicelessness}{17}{section*.51}
+\contentsline {section}{Appendices}{i}{section*.51}
+\contentsline {section}{\numberline {A.1} Variable Definitions}{i}{section.1}
+\contentsline {section}{\numberline {A.2} Code}{iii}{section.2}
+\contentsline {subsection}{\numberline {A.2.a} Data Shaping}{iii}{subsection.2.1}
+\contentsline {subsection}{\numberline {A.2.b} Independant Variable Plots}{iv}{subsection.2.2}
+\contentsline {subsection}{\numberline {A.2.c} Dependant Variable Plots}{vi}{subsection.2.3}
+\contentsline {subsection}{\numberline {A.2.d} Analysis}{vii}{subsection.2.4}
+\contentsline {subsubsection}{\numberline {A.2.d.i} Sibilant Duration}{vii}{subsubsection.2.4.1}
+\contentsline {subsection}{\numberline {A.2.e} Word Frequencies}{x}{subsection.2.5}

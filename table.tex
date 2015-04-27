@@ -1,0 +1,82 @@
+\begin{longtable}{| l | c | c | X |}
+  \hline
+  {\bf Variable} & {\bf Type} & {\bf Role} & {\bf Description}\\\hline\hline
+  \texttt{speaker}  & Categorical & Random Effect & Label of interviewee.\\\hline
+  \texttt{ethnicity} & Categorical & Fixed Effect & Black or White.\\\hline
+  \texttt{college} & Categorical & Fixed Effect & Whether or not the
+     interviewee has had any higher education.  Considered
+     indicative of speakers' socioeconomic aspirations\\\hline
+  \texttt{region} & Categorical & Fixed Effect & North or South.\\\hline
+  \texttt{age\_group} & Categorical (Ordered) & Fixed Effect & Age
+      group, ordered by birth year.
+        \newline group\_1: Pre-1919
+        \newline group\_2: 1919-1947
+        \newline group\_3: 1950-1970
+        \newline group\_4: 1980-1989\\\hline
+  \texttt{age} & Numeric & Fixed Effect & 2005 - \texttt{birth\_year}\\\hline
+  \texttt{birth\_year} & ---  & --- & Used to find age.\\\hline
+  \texttt{sex} & Categorical & Fixed Effect & Male or Female.\\\hline
+  \texttt{class} & Categorical & Fixed Effect & Lower Middle, Upper
+      Middle, or Working Class.\\\hline
+  \texttt{rurality} & Categorical & Fixed Effect & Rural or Non-Rural\\\hline
+  \texttt{interval} & --- & --- & Praat variable.\\\hline
+  \texttt{word} & Categorical & Random Effect & The word of interest in the token\\\hline
+  \texttt{morphological\_standing} & Categorical & Fixed Effect & Three levels
+      determined by how the word is stressed in a
+      sentence.  See How to Guide, pages 12-14.\\\hline
+  \texttt{sibilant} & Categorical & --- & Whether the word is pronounced with an
+      [s] or [z] in {\it standard pronunciation}.  \texttt{s} and
+      \texttt{z} are for word-final sibilants, while \texttt{p} and
+      \texttt{w} represent [s] and [z], respectively, for
+      word-internal sibilants.\\\hline
+  \texttt{sib.combined} & Categorical & Fixed Effect & [s] and [z] according to
+      {\it standard phonological pronunciation}, determined by \texttt{sibilant}.\\\hline
+  \texttt{sib.location} & Categorical & Fixed Effect & word-final or internal,
+      determined by \texttt{sibilant}\\\hline
+  \texttt{sib\_start} & --- & --- & Time code for start of sibilant in interview.\\\hline
+  \texttt{sib\_end} & --- & --- & Time code for end of sibilant in interview.\\\hline
+  \texttt{sib\_dur} & Numeric & Response & Duration of
+      sibilant. \texttt{sib.end - sib.start}\\\hline
+  \texttt{vls\_percent} & Numeric (Ratio) & Response & Percent
+      Voicelessness: Percent of \texttt{sib.dur} without glottal pulsing.\\\hline
+  \texttt{sib\_COG\_full} & Numeric & Response & Center of Gravity: mean height of
+      sibilant spectrum\footnote{
+        \url{http://www.fon.hum.uva.nl/praat/manual/Spectrum\_\_Get\_centre\_of\_gravity\_\_\_.html}
+      }\\\hline
+  \texttt{sib\_COG\_filtered} & Numeric & Response & Mean of sibilant spectrum filtered with the
+          Hann Function\footnote{\url{http://en.wikipedia.org/wiki/Hann\_function}}\\\hline
+  \texttt{sib\_COG\_60} & Numeric & Response & Center of Gravity of
+      the middle 60\% of the sibilant spectrum.\\\hline
+  \texttt{sib\_COG\_60\_filtered} & Numeric & Response & Mean height
+      of the middle 60\% of the sibilant spectrum filtered by the Hann Function.\\\hline
+  \texttt{sib\_intensity05} & Numeric & Fixed Effect & Intensity (dB) of
+      sibilant at 5\% of duration.\\\hline
+  \texttt{sib\_intensity25} & Numeric & Fixed Effect & Intensity (dB) of
+      sibilant at 25\% of duration.\\\hline
+  \texttt{sib\_intensity50} & Numeric & Fixed Effect & Intensity (dB) of
+      sibilant at 50\% of duration.\\\hline
+  \texttt{prec\_segment} & --- & --- & Sound that precedes
+      sibilant.\\\hline
+  \texttt{prec\_segment.type} & Categorical & Fixed Effect & Vowel or Consonant.\\\hline
+  \texttt{prec\_segment\_start} & --- & --- & Time code for start of
+      \texttt{prec\_segment} in interview.\\\hline
+  \texttt{prec\_segment\_end} & --- & --- & Time code for end of \texttt{prec\_segment} in interview.\\\hline
+  \texttt{prec\_segment\_dur} & Numeric & Response & Length of
+      preceding segment. \texttt{prec\_segment\_end} -
+      \texttt{prec\_segment\_start} \\\hline
+  \texttt{prec\_segment\_intensity05} & Numeric & Fixed Effect &
+      Intensity (dB) of preceding segment at 5\% of duration.\\\hline
+  \texttt{prec\_segment\_intensity25} & Numeric & Fixed Effect &
+      Intensity (dB) of preceding segment at 25\% of duration.\\\hline
+  \texttt{prec\_segment\_intensity50} & Numeric & Fixed Effect &
+      Intensity (dB) of preceding segment at 50\% of duration.\\\hline
+  \texttt{prec\_segment\_pitch05} & Numeric & Fixed Effect & Pitch of
+      preceding segment at 5\% of duration.\\\hline
+  \texttt{prec\_segment\_pitch25} & Numeric & Fixed Effect & Pitch of
+      preceding segment at 25\% of duration.\\\hline
+  \texttt{prec\_segment\_pitch50} &  Numeric & Fixed Effect & Pitch of
+      preceding segment at 50\% of duration.\\\hline
+  \texttt{following\_segment} & --- & --- & Sound that follows sibilant.\\\hline
+  \texttt{following\_segment.type} & Categorical & Fixed Effect &
+      Vowel, Consonant, or Pause.\\\hline
+\end{longtable}

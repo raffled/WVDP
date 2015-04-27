@@ -1,0 +1,28 @@
+\BOOKMARK [1][-]{section*.2}{Background}{}% 1
+\BOOKMARK [1][-]{section*.3}{Data Collection}{}% 2
+\BOOKMARK [1][-]{section*.5}{Independent Variables}{}% 3
+\BOOKMARK [2][-]{section*.6}{Social Variables}{section*.5}% 4
+\BOOKMARK [2][-]{section*.10}{Linguistic Variables}{section*.5}% 5
+\BOOKMARK [3][-]{section*.11}{Morphological Variables}{section*.10}% 6
+\BOOKMARK [3][-]{section*.13}{Phonological Variables}{section*.10}% 7
+\BOOKMARK [3][-]{section*.15}{Phonetic Variables}{section*.10}% 8
+\BOOKMARK [2][-]{section*.19}{Random Effects}{section*.5}% 9
+\BOOKMARK [1][-]{section*.20}{Dependent Variables}{}% 10
+\BOOKMARK [2][-]{section*.21}{Sibilant Duration}{section*.20}% 11
+\BOOKMARK [2][-]{section*.24}{Preceding Segment Duration}{section*.20}% 12
+\BOOKMARK [2][-]{section*.27}{Center of Gravity}{section*.20}% 13
+\BOOKMARK [2][-]{section*.30}{Percent Voicelessness}{section*.20}% 14
+\BOOKMARK [1][-]{section*.33}{Analysis}{}% 15
+\BOOKMARK [2][-]{section*.34}{Sibilant Duration}{section*.33}% 16
+\BOOKMARK [2][-]{section*.49}{Preceding Segment Duration}{section*.33}% 17
+\BOOKMARK [2][-]{section*.50}{Center of Gravity}{section*.33}% 18
+\BOOKMARK [2][-]{section*.51}{Percent Voicelessness}{section*.33}% 19
+\BOOKMARK [1][-]{section*.51}{Appendices}{}% 20
+\BOOKMARK [1][-]{section.1}{ Variable Definitions}{}% 21
+\BOOKMARK [1][-]{section.2}{ Code}{}% 22
+\BOOKMARK [2][-]{subsection.2.1}{ Data Shaping}{section.2}% 23
+\BOOKMARK [2][-]{subsection.2.2}{ Independant Variable Plots}{section.2}% 24
+\BOOKMARK [2][-]{subsection.2.3}{ Dependant Variable Plots}{section.2}% 25
+\BOOKMARK [2][-]{subsection.2.4}{ Analysis}{section.2}% 26
+\BOOKMARK [3][-]{subsubsection.2.4.1}{ Sibilant Duration}{subsection.2.4}% 27
+\BOOKMARK [2][-]{subsection.2.5}{ Word Frequencies}{section.2}% 28

@@ -1,0 +1,1389 @@
+\documentclass[a4paper]{article}
+\usepackage{Sweave}
+\usepackage{longtable}
+\usepackage{caption}
+\usepackage{tabularx}
+\usepackage{ltxtable}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage[utf8]{inputenc}
+\usepackage[top=.75in, bottom=1in, left=1in, right=1in]{geometry}
+
+
+\title{Alveolar Fricative Voicing in Appalacia: Preliminary Investigation}
+\author{Doug Raffle\\STAT 695}
+\date{\today}
+
+\begin{document}
+\vspace{-30pt}
+\maketitle
+\tableofcontents
+\thispagestyle{empty}
+
+\newpage
+\setcounter{page}{1}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+\fancyhead[R]{Doug Raffle}
+\fancyhead[L]{\bf Alveolar Fricative Voicing in Appalacia}
+\fancyfoot[LE, RO]{\thepage}
+\section*{Background}
+\addcontentsline{toc}{section}{Background}
+The goal of this study is to identify which sociolinguistic
+variables are most associated with how speakers of the Appalachian
+Dialect voice alveolar fricatives.  Fricatives are consonants
+that are produced by forcing air between two articulators, in this
+case the tongue and alveolar ridge (which is the ridge in your mouth
+between your upper teeth and the hard palate at the top of your
+mouth).  A sibilant is a consonant where the tongue is curled so that
+the air also flows under the edge of the teeth; alveolar
+fricatives are a subset of this class.  Like most consonant classes,
+alveolar fricatives can be voiced or voiceless.  Voiced alveolar
+fricatives are [z] sounds, and voiceless alveolar fricatives are [s]
+sounds.
+
+The simplest explanation of voicing is whether or not the vocal
+chords vibrate (referred to as glottal pulsing) as a sound is
+produced.  However, recent studies in psycholinguistics have revealed that the
+perception of voicing is actually a very complicated phenomenon,
+and whether a listener perceives a sound as voiced or voiceless depends
+on several variables.  A change in any one of these variables can
+change this perception.
+Because of this, studying voicing cannot simply be done by
+categorizing a sound a ``voiced'' or ``voiceless,'' as convenient as
+that might be.  In this study,
+the four main variables that are being considered as
+indicative of voicing are the Duration of the Sibilant, Center of
+Gravity, Percent Voicelessness of the sibilant, and the Duration of
+the Preceding Segment\footnote{
+  For a full listing of variables and their definitions,
+  see Appendix \ref{a:vardef}
+}$^,$\footnote{I'll try to get references for these studies from Dr. Hazen
+  at some point.
+}
+
+Simply put, this study is concerned with whether speakers pronounce
+the ``s'' in a word like ``brothers'' with an [s] sound like in
+``bus'' (voiceless), or a [z] sound as in ``buzz'' (voiced), and, perhaps more
+importantly, it is about how we quantify that difference.
+
+\section*{Data Collection}
+\addcontentsline{toc}{section}{Data Collection}
+Sixty-seven interviews were conducted with life-long residents of
+the Appalachian Region of the United States, including West Virginia,
+Southwestern Pennsylvania, and Southeastern Ohio.  Demographic
+information was recorded for each speaker.  Tokens, which are
+the unique speech acts that make up the observations in the data,
+containing alveolar fricatives were identified in audio recordings of the
+interviews and analyzed using Praat\footnote{
+  Praat is a software suite purpose built for analyzing phonetic data.\\
+  \url{http://www.fon.hum.uva.nl/praat/}
+}.  There are an average of forty-six tokens per speaker, with as few
+as twenty-seven and as many as fifty-six (Figure \ref{fig:token_count}).
+\vspace{-30pt}
+<<echo=FALSE>>=
+source("data.R")
+par(mfrow=c(1, 1), mai=c(1.02,0.82,0.82,0.42))
+@
+<<label=token_count, include=FALSE, echo=FALSE>>=
+barplot(sort(as.vector(table(dat$speaker))))
+abline(h=round(mean(table(dat$speaker))), col="red", lwd=3)
+@
+\begin{figure}[ht]
+  \begin{center}
+    \begin{minipage}[t]{0.8\linewidth}
+      \begin{center}
+<<fig=TRUE, echo=FALSE, height=4>>=
+<<token_count>>
+@
+      \end{center}
+    \end{minipage}
+  \end{center}
+  \vspace{-60pt}
+  \caption{Token Count by Speaker}
+  \label{fig:token_count}
+\end{figure}
+\section*{Independent Variables}
+\addcontentsline{toc}{section}{Independent Variables}
+\subsection*{Social Variables}
+\addcontentsline{toc}{subsection}{Social Variables}
+For each interviewee (speaker), researchers recorded their ethnicity,
+education level, region, age, sex, social class, and rurality.  Most
+of these variables are factors with two or three levels, but age is
+recorded both as a numeric age in years and as a factor with four levels based on
+age group.  While effort was made to find at least one token for every
+combination of factor levels, there is substantial unbalance both the
+number of tokens for each factor (Figure \ref{fig:social_by_token}) and
+number of speakers for each factor (Figure
+\ref{fig:social_by_speaker}), especially for \texttt{ethnicity},
+\texttt{college}, \texttt{rurality}, and \texttt{class}.\\
+\vspace{-5pt}
+<<label=soc.tok, include=FALSE, echo=FALSE>>=
+social <- dat[,c(1:5, 7:9, 36)]
+par(mfrow=c(1,7), cex.axis=2, las=3, cex.main=2, mai=c(1.5, .5, .5, .25))
+barplot(table(social$ethnicity), main="Ethnicity")
+barplot(table(social$college), main="College")
+barplot(table(social$region), main="Region")
+barplot(table(social$sex), main="Sex")
+barplot(table(social$rurality), main="Rurality")
+barplot(table(social$class), main="Class")
+barplot(table(social$age_group), main="Age Group")
+@
+\begin{figure}[ht]
+  \vspace{-5pt}
+  \begin{center}
+<<fig=TRUE, echo=FALSE, height=4, width=10>>=
+<<soc.tok>>
+@
+  \end{center}
+  \vspace{-20pt}
+  \caption{Token Counts by Social Variable}
+  \label{fig:social_by_token}
+\end{figure}
+
+<<label=soc.speaker, include=FALSE, echo=FALSE>>=
+library(plyr)
+social.speaker <- ddply(social, ~ speaker, count)[,-10]
+par(mfrow=c(1,7), cex.axis=2, las=3, cex.main=2, mai=c(1.5, .5, .5, .25))
+barplot(table(social.speaker$ethnicity), main="Ethnicity")
+barplot(table(social.speaker$college), main="College")
+barplot(table(social.speaker$region), main="Region")
+barplot(table(social.speaker$sex), main="Sex")
+barplot(table(social.speaker$rurality), main="Rurality")
+barplot(table(social.speaker$class), main="Class")
+barplot(table(social.speaker$age_group), main="Age Group")
+@
+\begin{figure}[ht]
+  \begin{center}
+<<fig=TRUE, echo=FALSE, height=4, width=10>>=
+<<soc.speaker>>
+@
+  \end{center}
+  \vspace{-20pt}
+  \caption{Speaker Counts by Social Variable}
+  \label{fig:social_by_speaker}
+\end{figure}
+\newpage
+While the age groups are fairly evenly represented, this is because
+the age groups are not defined with even age ranges (see Appendex
+\ref{a:vardef}).  When numeric ages are considered, it is obvious that
+people between the ages of twenty and twenty-five far outnumber any
+other similarly sized age range in the data (Figure
+\ref{fig:age_by_speaker}).  Because of this, and the fact that both
+age variables are collected at the speaker level and not at the token
+level, it will probably be better to use \texttt{age\_group} as a factor
+than \texttt{age} as a numeric predictor.\vspace{-10pt}
+
+<<label=age_by_speaker, include=FALSE, echo=FALSE>>=
+par(mfrow=c(1,1), mai=c(.5, 1, .5, .5))
+hist(social.speaker$age, col="darkgrey", xlab="Age",
+     main="", cex.axis=2, cex.lab=2)
+@
+\begin{figure}[ht]
+  \begin{center}
+    \begin{minipage}[t]{0.35\linewidth}\begin{center}
+<<fig=TRUE, echo=FALSE>>=
+<<age_by_speaker>>
+@
+    \end{center}\end{minipage}
+    \vspace{-5pt}
+  \caption{Histogram of Speaker Ages}
+  \label{fig:age_by_speaker}
+  \end{center}
+\end{figure}
+
+\subsection*{Linguistic Variables}
+\addcontentsline{toc}{subsection}{Linguistic Variables}
+The linguistic variables were collected at the word or token level,
+and describe the sibilant of interest and its linguistic environment.
+
+\subsubsection*{Morphological Variables}
+\addcontentsline{toc}{subsubsection}{Morphological Variables}
+The morphological variables are both categorical variables.
+Morphological Standing specifies how the word containing the sibilant
+is stressed, and Sibilant Location describes where in that word the
+sibilant occurs.   Almost all of the
+sibilants are part of words that with primary or secondary stress in
+the sentence, and there are many more word-final sibilants than
+internal sibilants.\vspace{-5pt}
+
+<<label=morpho, include=FALSE, echo=FALSE>>=
+par(cex.axis=2, cex.lab=2, cex.main=2, mai=c(.5, .5, 1, 0))
+barplot(summary(dat$morphological_standing),  main="Morphological Standing")
+@
+<<label=sib.loc, include=FALSE, echo=FALSE>>=
+par(cex.axis=2, cex.lab=2, cex.main=2)
+barplot(summary(dat$sib.location), main="Sibilant Location")
+@
+\begin{figure}[ht]
+    \begin{center}
+      \begin{minipage}[t]{0.3\linewidth}
+        \begin{center}
+<<fig=TRUE, echo=FALSE>>=
+<<morpho>>
+@
+        \end{center}
+      \end{minipage}
+      \begin{minipage}[t]{0.3\linewidth}\begin{center}
+<<fig=TRUE, echo=FALSE>>=
+<<sib.loc>>
+@
+      \end{center}\end{minipage}
+      \vspace{-5pt}
+      \caption{Token Count by Morphological Variable}
+      \label{fig:morpho}
+    \end{center}
+\end{figure}
+
+\vspace{-20pt}
+\subsection*{Phonological Variables}
+\addcontentsline{toc}{subsubsection}{Phonological Variables}
+The phonological variables describe the types of sounds that
+precede and follow the sibilant, as well as its standard
+pronunciation.  These variables are more closely associated with the word
+than the token, but in the case where a pause follows a word-final
+sibilant this line is blurred.\vspace{-5pt}
+
+<<label=phono, echo=FALSE, include=FALSE>>=
+par(mfrow=c(1,3))
+barplot(summary(dat$prec_segment.type), main="Preceding\n Segment Type")
+barplot(summary(dat$following_segment.type), main="Following\n Segment Type", las=3)
+barplot(summary(dat$sib.combined), main="Standard Pronunciation")
+@
+
+\begin{figure}[ht]
+  \begin{center}
+    \begin{minipage}[t]{0.8\linewidth}
+      \begin{center}
+<<fig=TRUE, echo=FALSE, height=2.5>>=
+<<phono>>
+@
+      \end{center}
+    \end{minipage}
+    \caption{Token Count by Phonological Variable}
+    \label{fig:phono}
+  \end{center}
+\end{figure}
+\subsection*{Phonetic Variables}
+\addcontentsline{toc}{subsubsection}{Phonetic Variables}
+The phonetic variables are physical characteristics of the
+sibilant and the preceding segment, and they are collected at the
+token level.  Pitch and intensity were measured
+at three points in both the preceding segment and sibilant: at 5\%,
+25\%, and 50\% through the duration of the sounds.\vspace{-15pt}
+
+<<label=sib.intensity, include=FALSE, echo=FALSE>>=
+par(mfrow=c(1, 3), cex=.75, cex.main=1)
+hist(dat$sib_intensity05, main="Sib. Intensity 5%",
+     xlab="Intensity", col="darkgrey", freq=FALSE, ylim=c(0, 0.045))
+lines(density(dat$sib_intensity05), col="red", lwd=2)
+hist(dat$sib_intensity25, main="Sib. Intensity 25%",
+     xlab="Intensity", col="darkgrey", freq=FALSE, ylim=c(0, 0.045))
+lines(density(dat$sib_intensity25), col="red", lwd=2)
+hist(dat$sib_intensity50, main="Sib. Intensity 50%",
+     xlab="Intensity", col="darkgrey", freq=FALSE, ylim=c(0, 0.045))
+lines(density(dat$sib_intensity50), col="red", lwd=2)
+@
+\begin{figure}[h]
+  \begin{center}
+<<fig=TRUE, echo=FALSE, height=3>>=
+<<sib.intensity>>
+@
+  \caption{Density Histograms of Sibilant Intensities}
+  \label{fig:sib.intensity}
+  \end{center}
+\end{figure}
+<<label=prec.intensity, include=FALSE, echo=FALSE>>=
+par(mfrow=c(1, 3), cex=.75, cex.main=1)
+hist(dat$prec_segment_intensity05, main="Prec. Segment Intensity 5%",
+     xlab="Intensity", col="darkgrey", freq=FALSE)
+lines(density(dat$prec_segment_intensity05), col="red", lwd=2)
+hist(dat$prec_segment_intensity25, main="Prec. Segment Intensity 25%",
+     xlab="Intensity", col="darkgrey", freq=FALSE)
+lines(density(dat$prec_segment_intensity25), col="red", lwd=2)
+hist(dat$prec_segment_intensity50, main="Prec. Segment Intensity 50%",
+     xlab="Intensity", col="darkgrey", freq=FALSE)
+lines(density(dat$prec_segment_intensity50), col="red", lwd=2)
+@
+\begin{figure}[h]
+  \begin{center}
+<<fig=TRUE, echo=FALSE, height=3>>=
+<<prec.intensity>>
+@
+  \caption{Density Histograms of Preceding Segment Intensities}
+  \label{fig:prec.intensity}
+  \end{center}
+\end{figure}
+
+<<label=prec.pitch, include=FALSE, echo=FALSE>>=
+par(mfrow=c(1, 3), cex=.75, cex.main=1)
+hist(dat$prec_segment_pitch05, main="Prec. Segment Pitch 5%",
+     xlab="Pitch", col="darkgrey", freq=FALSE)
+lines(density(dat$prec_segment_pitch05, na.rm=T), col="red", lwd=2)
+hist(dat$prec_segment_pitch25, main="Prec. Segment Pitch 25%",
+     xlab="Pitch", col="darkgrey", freq=FALSE)
+lines(density(dat$prec_segment_pitch25, na.rm=T), col="red", lwd=2)
+hist(dat$prec_segment_pitch50, main="Prec. Segment Pitch 50%",
+     xlab="Pitch", col="darkgrey", freq=FALSE)
+lines(density(dat$prec_segment_pitch50, na.rm=T), col="red", lwd=2)
+@
+\begin{figure}[h!]
+  \begin{center}
+<<fig=TRUE, echo=FALSE, height=3>>=
+<<prec.pitch>>
+@
+  \caption{Density Histograms of Preceding Segment Pitches}
+  \label{fig:prec.pitch}
+  \end{center}
+\end{figure}
+
+\newpage
+\subsection*{Random Effects}
+\addcontentsline{toc}{subsection}{Random Effects}
+There are two random effects in this data: speaker and word.  How the
+relationship between speaker, word, and token is defined could
+potentially make a huge impact on the results and warrants careful
+consideration. Out of 3,119 tokens, there are 1,295 unique words among
+the sixty-seven speakers; 790 of those occur in just one token\footnote{
+  This makes sense.  According to Zipf's Law, the frequencies of words
+  in any given corpus are inversely proportional to their rank.  Even
+  though this data is a sample of specific types of words from within
+  a corpus, it should still follow a power law distribution (at least approximately).\\
+  \url{http://en.wikipedia.org/wiki/Zipf\%27s_law}
+}.  Speakers used as few as twenty-one and as many as forty-nine
+unique words, with a median count of forty (see Appendix \ref{a:res}).
+
+The simpler model is to consider word and speaker as separate
+(crossed) effects.  Word-to-word variability and
+speaker-to-speaker variablity are considered separately, and like
+words are grouped together regardless of the speaker.  If the speaker
+has no bearing on the word this model will fit well.
+
+The other approach would be to nest words inside of speaker.  Here,
+words are only grouped together if they are spoken by the same
+individual. This
+model would consider the variability among the 2,617 unique
+word:speaker combinations instead of the 1,295 unique words.  This
+model is the best choice if certain speakers prefer certain words (or
+types of words).
+
+Conceptually, either structure makes sense, and, given the large number
+of unique words relative to both the number of speakers and the number
+of tokens, there is not a clearly defined better choice.  To determine
+the nature of the relationship, it will come down to modeling the
+responses both ways and comparing the results.  If one method consistently
+outperforms the other, that will point to the true underlying
+structure of the data.
+
+<<label=random.effect.groups.0, echo=FALSE, eval=FALSE, include=FALSE>>=
+library(lme4)
+(n.unique.words <- length(table(dat$word)))
+(n.hapax <- length(table(dat$word)[table(dat$word) == 1]))
+@
+<<label=random.effect.groups, echo=FALSE, eval=FALSE, include=FALSE>>=
+par(mfrow=c(1,2), cex=.75, cex.main=1, cex.lab=1)
+#### Zipf's Law:
+plot(sort(table(dat$word), decreasing=TRUE),
+     main="Word Frequency by Index",
+     ylab="Frequency", pch=20)
+## Log-Log should be roughly linear:
+plot(log(sort(table(dat$word), decreasing=TRUE)), log(1:n.unique.words),
+     main="Word Freq. by Index (Log-Log)",
+     xlab="Log(Index)", ylab="Log(Freq.)", pch=20)
+abline(a=6.9, b=-1.5,
+            col="red", lwd=2)
+@
+<<label=random.effect.groups.2, echo=FALSE, eval=FALSE, include=FALSE>>=
+#### Look at words within speaker:
+speaker.word.count <- by(dat$word, dat$speaker, count)
+speaker.word.table <- sapply(speaker.word.count, nrow)
+summary(speaker.word.table)
+barplot(sort(speaker.word.table), main="Number of Unique Words by Speaker")
+abline(h=mean(speaker.word.table), col="red")
+
+#### Double check that lmer() gets the same number of unique words and
+#### figure out the number of groups in nested structure
+summary(lmer(sib_dur ~ (1|speaker) + (1|word), dat))$ngrps  #crossed
+summary(lmer(sib_dur ~ (1|speaker/word), dat))$ngrps  #nested
+@
+
+
+\section*{Dependent Variables}
+\addcontentsline{toc}{section}{Dependent Variables}
+The responses are all phonetic variables and, taken as a whole, paint
+the picture of the sounds that were recorded in the token,
+particularly the sibilant and its preceding segment.
+The model used for each response is determined
+by its distributionality.  Responses that follow Normal Distributions
+(or can be easily transformed to) can be modeled with Linear Mixed
+Models (LMMs), while responses that follow other well-defined
+distributions (such as Binomial or Gamma Distributions) can be modeled
+using Generalized Linear Mixed Models (GLMMs).  If any response does
+not follow a well-behaved distribution an appropriate non-parametric
+model can be used.
+
+\subsection*{Sibilant Duration}
+\addcontentsline{toc}{subsection}{Sibilant Duration}
+Sibilant Duration is the time, in seconds, it took the speaker to
+create that particular sibilant sound.
+<<label=sib_dur_hist, echo=FALSE, eval=FALSE>>=
+par(cex=1, cex.lab=2, cex.main=2, cex.axis=2, mai=c(1, 1, 0, .5))
+hist(dat$sib_dur, freq=FALSE, xlab="Duration (sec)", main="",
+     ylim=c(0, 13), col="darkgrey")
+lines(density(dat$sib_dur), col="red", lwd=3)
+@
+\begin{figure}[h!]
+  \begin{center}
+    \begin{minipage}[t]{0.5\linewidth}
+      \begin{center}
+<<fig=TRUE, echo=FALSE, height=5.5>>=
+<<sib_dur_hist>>
+@
+      \end{center}
+    \end{minipage}
+    \caption{Density Histogram of Sibilant Duration}
+    \label{fig:sib_dur_hist}
+  \end{center}
+\end{figure}
+
+The distribution is strictly positive and has significant
+right-skew, which is not unexpected.  Time measurements, by nature,
+have a lower bound of zero, and, given the relatively short amount of
+time it takes to produce a consonant sound, it is not surprising that
+the density is highest closer to zero and tapers off as duration increases.
+
+This shape resembles either a Lognormal Distribution (i.e., the
+logarithm of the variable has a Normal Distribution) or a Gamma
+Distribution.  How closely it follows these distributions can be
+evaluated using Quantile--Quantile Plots (Figure \ref{fig:sib_dur_qq}).
+In these plots, the points
+following an approximately straight line indicate that the
+distribution of the variable closely follows the named distribution.
+
+<<label=sib_dur_qq, include=FALSE, echo=FALSE>>=
+library(MASS); library(car)
+par(mfrow=c(1, 3), cex=.5, cex.main=1.5, cex.lab= 1.5, cex.axis=1,
+    mai=c(.5, .65, .5, 0))
+qqPlot(dat$sib_dur, main="Normal Q-Q", ylab="Sibilant Duration", lwd=1)
+qqPlot(log(dat$sib_dur), main="Lognormal Q-Q", ylab="Log(Sibilant Duration)", lwd=1)
+gamma.coef <- round(fitdistr(dat$sib_dur, "gamma")[[1]], 3)
+qqPlot(dat$sib_dur, "gamma", shape=gamma.coef[1], rate=gamma.coef[2],
+       main="Gamma Q-Q", ylab="Sibilant Duration", lwd=1)
+@
+\begin{figure}[h!]
+  \begin{center}
+    \begin{minipage}[t]{\linewidth}
+      \begin{center}
+<<fig=TRUE, echo=FALSE, height=2.25>>=
+<<sib_dur_qq>>
+@
+      \end{center}
+    \end{minipage}
+    \caption{Sibilant Duration Quantile--Quantile Plots}
+    \label{fig:sib_dur_qq}
+  \end{center}
+\end{figure}
+Since Sibilant Duration most closely follows a Lognormal Distribution,
+an LMM will be fit using the logarithm of Sibilant Duration as the response.
+
+\subsection*{Preceding Segment Duration}
+\addcontentsline{toc}{subsection}{Preceding Segment Duration}
+Similar to Sibilant Duration, Preceding Segment Duration is a
+measurement of the time it took to produce the sound preceding the sibilant.
+
+<<label=prec_dur_hist, echo=FALSE, eval=FALSE>>=
+par(cex=1, cex.lab=2, cex.main=2, cex.axis=2, mai=c(1, 1, 0, .5))
+hist(dat$prec_segment_dur, freq=FALSE, xlab="Duration (sec)", main="",
+     ylim=c(0, 9), col="darkgrey")
+lines(density(dat$prec_segment_dur[!is.na(dat$prec_segment_dur)]),
+      col="red", lwd=3)
+@
+\begin{figure}[h!]
+  \begin{center}
+    \begin{minipage}[t]{0.5\linewidth}
+      \begin{center}
+<<fig=TRUE, echo=FALSE, height=5.5>>=
+<<prec_dur_hist>>
+@
+      \end{center}
+    \end{minipage}
+    \caption{Density Histogram of Preceding Segment Duration}
+    \label{fig:prec_dur_hist}
+  \end{center}
+\end{figure}
+Again, the distribution is strictly positive and right-skewed.  The
+increased variability in Preceding Segment Duration compared to
+Sibilant Duration likely comes from the fact that the preceding
+segments can be a variety of consonants and vowels, whereas the
+sibilant is restricted to only alveolar fricatives.  The same process
+of examining Quantile--Quantile Plots is used to select an appropriate
+model for Preceding Segment Duration.
+
+<<label=prec_dur_qq, include=FALSE, echo=FALSE>>=
+par(mfrow=c(1, 3), cex=.5, cex.main=1.5, cex.lab= 1.5, cex.axis=1,
+    mai=c(.5, .65, .5, 0))
+qqPlot(dat$prec_segment_dur, main="Normal Q-Q", ylab="Duration", lwd=1)
+qqPlot(log(dat$prec_segment_dur), main="Lognormal Q-Q", ylab="Log(Duration)", lwd=1)
+gamma.coef <- round(fitdistr(dat$prec_segment_dur[!is.na(dat$prec_segment_dur)],
+                             "gamma")[[1]], 3)
+qqPlot(dat$prec_segment_dur, "gamma", shape=gamma.coef[1], rate=gamma.coef[2],
+       main="Gamma Q-Q", ylab="Duration", lwd=1)
+@
+\begin{figure}[h!]
+  \begin{center}
+    \begin{minipage}[t]{\linewidth}
+      \begin{center}
+<<fig=TRUE, echo=FALSE, height=2.25>>=
+<<prec_dur_qq>>
+@
+      \end{center}
+    \end{minipage}
+    \caption{Preceding Segment Duration Quantile--Quantile Plots}
+    \label{fig:prec_dur_qq}
+  \end{center}
+\end{figure}
+
+For Preceding Segment Duration, a Gamma GLMM is the best fit.
+
+\subsection*{Center of Gravity}
+\addcontentsline{toc}{subsection}{Center of Gravity}
+The Center of Gravity (CoG) is the average frequency over the sibilant's
+sound spectrum.  Since the tokens were recorded in interviews, two methods
+were used to ``clean up the signal'' and filter out any interference
+that may distort the Center of Gravity.  One method is to only
+consider the middle sixty percent of the signal, which makes sure only
+the sibilant itself is being considered and no noise from the preceding
+or following segments is bleeding over into the sibilant spectrum.  In
+addition to this, the token spectrums were filtered using the Hann
+Function, which is a bell-shaped window function, to help eliminate
+extraneous noise.
+
+Center of Gravity, then, exists in four different versions: the Full (raw)
+CoG, the Middle 60\% CoG, the Filtered CoG, and the Filtered Middle
+60\% CoG.  Obviously, these four variables will be highly collinear.
+To avoid any of the issues that arise from multicollinearity, it makes
+the most sense to only select the version with the smoothest curve, which
+is the Filtered Middle 60\% CoG (Figure \ref{fig:cog_hist}).
+
+<<label=cog_hist, echo=false, include=false>>=
+par(mfrow=c(2,2), cex=.5, cex.main=1.5, cex.lab= 1.5, cex.axis=1,
+    mai=c(.5, .5, .25, 0))
+hist(dat$sib_COG_full, xlab="CoG", main="Full CoG", freq=FALSE, col="darkgrey",
+     ylim=c(0, 5e-4))
+lines(density(dat$sib_COG_full), col="red")
+hist(dat$sib_COG_60, xlab="CoG", main="60% CoG", freq=FALSE, col="darkgrey")
+lines(density(dat$sib_COG_60), col="red")
+hist(dat$sib_COG_filtered, xlab="CoG", main="Filtered CoG", freq=FALSE,
+     col="darkgrey")
+lines(density(dat$sib_COG_filtered), col="red")
+hist(dat$sib_COG_60_filtered, xlab="CoG", main="Filtered 60% CoG", freq=FALSE,
+     col="darkgrey")
+lines(density(dat$sib_COG_60_filtered), col="red")
+@
+\begin{figure}[h!]
+  \begin{center}
+    \begin{minipage}[t]{.9\linewidth}
+      \begin{center}
+<<fig=TRUE, echo=FALSE, height=6.5>>=
+<<cog_hist>>
+@
+      \end{center}
+    \end{minipage}
+    \caption{Density Histograms of Centers of Gravity}
+    \label{fig:cog_hist}
+  \end{center}
+\end{figure}
+
+<<label=cog_qq, echo=FALSE, include=TRUE>>=
+par(mfrow=c(1,1), cex=1, cex.lab=1.5, cex.main=1.5, cex.axis=1,
+    mai=c(1, 1, 0, 0))
+qqPlot(dat$sib_COG_60_filtered, ylab="CoG")
+@
+\begin{figure}[h!]
+  \begin{center}
+    \begin{minipage}[t]{.4\linewidth}
+      \begin{center}
+<<fig=TRUE, echo=FALSE, height=5>>=
+<<cog_qq>>
+@
+      \end{center}
+    \end{minipage}
+    \caption{Normal Quantile--Quantile Plot for Filtered 60\% CoG}
+    \label{fig:cog_qq}
+  \end{center}
+\end{figure}
+\newpage
+While  the distribution isn't perfectly Normal (Figure
+\ref{fig:cog_qq}), a straightforward LMM should be sufficient for
+modeling the Center of Gravity.
+
+
+\newpage
+\subsection*{Percent Voicelessness}
+\addcontentsline{toc}{subsection}{Percent Voicelessness}
+Percent Voicelessness as a variable name is slightly misleading.  This
+variable is a measure of the percent of the sibilant's duration that
+lacks glottal pulsing, and, as discussed previously, this is only one
+part of what determines whether a sound is voiced or voiceless.  As
+Figure \ref{fig:vls_hist} shows, Percent Voicelessness is continuous,
+bimodal, and bounded by zero and one.   As such, it most likely follows a Beta
+Distribution with shape parameters less than one.
+
+<<label=vls_hist, echo=FALSE, include=FALSE>>=
+par(cex=1, cex.lab=1.25, cex.main=1.5)
+hist(dat$vls_percent, freq=FALSE, xlab="Voicelessness (%)",
+     col="darkgrey", main="")
+lines(density(dat$vls_percent), col="red", lwd=2)
+@
+\begin{figure}[h!]
+  \begin{center}
+    \begin{minipage}[t]{0.6\linewidth}
+      \begin{center}
+<<fig=TRUE, echo=FALSE, height=4>>=
+<<vls_hist>>
+@
+      \end{center}
+    \end{minipage}
+    \caption{Density Histogram of Percent Voicelessness}
+    \label{fig:vls_hist}
+  \end{center}
+\end{figure}
+
+<<label=vls_qq, echo=FALSE, include=FALSE>>=
+qqPlot(dat$vls_percent, "beta", shape1=0.5, shape2=0.35,
+       ylab="Voicelessness (%)")
+@
+\begin{figure}[h!]
+  \begin{center}
+    \begin{minipage}[t]{0.6\linewidth}
+      \begin{center}
+<<fig=TRUE, echo=FALSE, height=5>>=
+<<vls_qq>>
+@
+      \end{center}
+    \end{minipage}
+    \caption{Beta Quantile--Quantile Plot of Percent Voicelessness\\
+      ($\alpha=0.5, \beta=0.35$)}
+    \label{fig:vls_qq}
+  \end{center}
+\end{figure}
+
+Beta Distributions, by their restricted nature,  present unique
+challenges for modeling.  This could possibily be modeled as a GLMM
+with a logit link function, but it may be best to use Beta Regression\footnote{
+  \url{http://cran.r-project.org/web/packages/betareg/vignettes/betareg-ext.pdf}
+} or some kind of non-parametric regression.  This will be explored later.
+
+\newpage
+\section*{Analysis}
+\addcontentsline{toc}{section}{Analysis}
+For each response there are seven social variables, fourteen linguistic
+variables, and three covariates, for a total of twenty-four predictors
+that need to be evaluated. Even if models are restricted to only those
+with two-factor interactions, that adds another 276 potential terms.
+Given this complex nature, backward variable selection
+techniques will be avoided in favor of forward
+selection.  As this analysis is continued, the approach to variable
+selection will be refined.
+
+Unfortunately, the functionality is not yet included in any R package
+to automatically apply forward selection techniques to mixed effects
+models.  Rense Nieuwenhuis, a sociologist from Swedish Institute for
+Social Research (SOFI) of Stockholm University,
+publicly released his code for a function that implements a basic
+stepwise function for forward selection with mixed effects models.  It
+works by iteratively fitting models with added terms and comparing
+them using a (ML) likelihood ratio test\footnotemark.
+
+\footnotetext{
+  As this is an unpublished package that has never been formally
+  peer-reviewed, its methodology and results need to be verified
+  before we run with them.\\
+  \url{http://www.rensenieuwenhuis.nl/r-sessions-32/}
+}
+
+
+Hox outlines a step-up procedure for variable selection in
+mixed effects models which will be (mostly) followed here\footnotemark.
+\begin{enumerate}
+  \item Fit a model with only the random intercepts.  Instead of an
+    intercept only model, selection will start with the other
+    responses as covariates.
+  \item Determine significant fixed effects at the observation level
+    (low level effects).
+  \item Determine significant fixed effects at the group level.  In
+    this study, these are the social variables (which describe the
+    speaker) and the morphological/phonological variables (which
+    describe the word).
+  \item Explore the random effects structure.
+\end{enumerate}
+
+\footnotetext{
+  Hox, J. J. (2002). Multilevel analysis techniques and
+  applications. Mahwah, N.J.: Lawrence Erlbaum Associates. (45-50).
+}
+
+
+
+In addition to using a log transformation for Sibilant Duration,
+several variables should be scaled.  Center of Gravity ranges from
+1,112--12,250 Hz,  durations range from 0.035--0.445
+sec., the intensities range from 23.11--89.47 dB, and Percent
+Voicelessness is in the unit interval (0--1).  Scaling CoG, the pitches, and the
+intensities will lead to coefficients that are easier to compare (with
+the added benefit of reducing collinearity).
+
+For the time being interactions will only be considered between variables of the same
+type (e.g., interactions among social variables
+and among morphological variables, but not between them) and a few
+other interactions of interest (such as sibilant location and standard
+pronunciation).  Also worth noting is that model comparisons are only
+meaningful if the models are based on the same data.  Because of this,
+any row that contains a missing value will have to be omitted.
+
+
+\subsection*{Sibilant Duration}
+\addcontentsline{toc}{subsection}{Sibilant Duration}
+\subsubsection*{Base Model}
+<<label=pretty.print, echo=FALSE, results=tex, strip.white=false>>=
+pretty.summary.print <- function(mod.sum){
+    cat("\\begingroup
+        \\catcode\`_=\\active
+        \\gdef\\works{
+           \\catcode\`_=\\active
+           \\def_{\\textunderscore\\-}%
+        }")
+    cat("\\texttt{")
+    cat(mod.sum$methTitle, "\\newline ")
+    cat("Formula:\\newline ")
+    print(mod.sum$call)
+    cat("\\newline\\newline REML at convergence: ", mod.sum$AICtab, "\\newline ")
+    cat("\\newline\ Random Effects:\\newline ")
+    retab <- data.frame(mod.sum$varcor, stringsAsFactors=FALSE)[,-3]
+    colnames(retab) <- c("Groups", "Name", "Variance", "St.Dev.")
+    retab$Name[3] <- ""
+    retab <- xtable(retab)
+    print(retab, floating=FALSE, include.rownames=FALSE)
+    cat("\\newline Number of obs: ", length(residuals(mod.sum)),
+        ", groups: ", "word, ", mod.sum$ngrps[1], "; speaker, ",
+        mod.sum$ngrps[2], "\\newline ", sep="")
+    cat("\\newline Fixed Effects:\\newline ")
+    coefs <- xtable(mod.sum$coef, digits=3)
+    print(coefs, floating=FALSE)
+    cat("}\\endgroup\\newline")
+}
+@
+
+<<label=sib.dur.0, echo=FALSE, results=tex, strip.white=false>>=
+library(xtable)
+library(lme4, quietly=TRUE)
+library(lmerTest, quietly=TRUE, warn.conflicts=FALSE)
+#### Get a data frame with only the variables under consideration
+dat2 <- dat[,c(1:4, 7:9, 11:12, 16:17, 21:24, 28, 29:34, 36:40)]
+colnames(dat2)[6] <- "social.class" #to avoid confusion with function class()
+#### Shorten names for narrower printing
+colnames(dat2)[9] <- "morph.standing"
+colnames(dat2)[12] <- "sib.cog"
+colnames(dat2)[17:19] <- paste(rep("prec.int", 3),
+                               c("05", "25", "50"), sep="")
+colnames(dat2)[20:22] <- paste(rep("prec.pitch", 3),
+                               c("05", "25", "50"), sep="")
+colnames(dat2)[26:27] <- c("prec.type", "following.type")
+#### scale COG & intensities
+dat2$sib.cog <- scale(dat2$sib.cog)
+dat2[,17:19] <- scale(dat2[,17:19])
+dat2[,20:22] <- scale(dat2[,20:22])
+## omit rows w/ NAs so all models have same number of observations
+dat2 <- na.omit(dat2)
+
+#### get base model
+sib.dur.0 <- lmer(log(sib_dur) ~ prec_segment_dur + sib.cog
+                 + vls_percent + (1|word) + (1|speaker), dat2)
+s0 <- summary(sib.dur.0)
+pretty.summary.print(s0)
+@
+
+\subsubsection*{Selecting Low Level Fixed Effects}
+Now the low level effects (those collected at the token level) can
+be added to the model using forward selection.\newline
+
+<<label=sib.dur.1, echo=FALSE, results=tex>>=
+source("forward.lmer.R")
+#### forward.lmer only takes variable names, not a formula for upper, which is
+#### rather inconvenient.  Create vectors of variable names & interactions:
+terms <- list(
+    soc = colnames(dat2)[c(2:7, 23)],
+    morpho = colnames(dat2)[c(9,24)],
+    phonol = colnames(dat2)[25:27],
+    phonetic = colnames(dat2)[c(13:15, 17:22)]
+)
+
+#### get interactions
+interact <- function(vars){
+    interact <- vars
+    for(i in 1:(length(vars)-1)){
+        for(j in (i+1):length(vars)){
+            interact <- append(interact, paste(vars[i], vars[j], sep=":"))
+        }
+    }
+    interact
+}
+terms <- lapply(terms, interact)
+
+#### start modeling.  huzzah.  may take a while.
+## time <- system.time(sib.dur.1 <- forward.lmer(sib.dur.0,
+##                                   blocks=terms$phonetic,
+##                                   max.iter = length(terms$phonetic),
+##                                   sig.level=0.05, print.log=FALSE))
+s1 <- summary(sib.dur.1)
+#### re-run model w/ lmerTest to we can can p-vals
+s1 <- summary(sib.dur.1 <- lmerTest::lmer(s1$call$formula, dat2))
+pretty.summary.print(s1)
+cat("\\newline\\newline\\texttt{Selection completed in",
+    round(time[3]/60, 1), "minutes.}\\newline\\newline")
+@
+
+This model has an interaction that includes \texttt{prec.pitch05}, which
+was not left in the model on its own.
+
+<<label=sib.dur.2>>=
+sib.dur.1.1 <- update(sib.dur.1, . ~ . + prec.pitch05)
+@
+<<label=sib.dur.3, echo=FALSE, results=tex>>=
+print(xtable(anova(sib.dur.1.1, sib.dur.1)), table.placement="h!")
+@
+
+While there is no real difference in the fit of the models,
+first-order terms always need to be included if their interactions are.\newline
+
+<<label=sib.dur.3.1, echo=FALSE, results=tex>>=
+sib.dur.1.1 <- lmer(summary(sib.dur.1.1)$call$formula, dat2)
+pretty.summary.print(summary(sib.dur.1.1))
+@
+
+\subsubsection*{Selecting High Level Fixed Effects}
+Fixed effects collected at the group level can now be considered.\newline
+
+<<label=sib.dur.4, echo=FALSE, results=tex>>=
+## time2 <- system.time(sib.dur.2 <- forward.lmer(sib.dur.1.1,
+##                                     blocks=c(terms$morpho, terms$soc, terms$phono,
+##                                              "sib.combined:sib.location"),
+##                                     max.iter = length(c(terms$morpho, terms$soc,
+##                                                       terms$phono)) + 1,
+##                                     sig.level=0.05, print.log=FALSE))
+s2 <- summary(sib.dur.2)
+#### re-run model w/ lmerTest to we can get can p-vals
+s2 <- summary(sib.dur.2 <- lmerTest::lmer(s2$call$formula, dat2))
+pretty.summary.print(s2)
+cat("\\newline\\newline\\texttt{Selection completed in",
+    round(time2[3]/60, 2), "minutes.}\\newline\\newline")
+@
+
+By adding in the high level effects, the word-to-word
+variability has been reduced substantially, and the speaker-to-speaker
+and token-to-token variability marginally.  At the same time,
+\texttt{prec.int25} is no longer significant, and its removal can be
+evaluated.  Like with the low level variable selection, there are
+interactions included in this model that are missing first-order terms
+(\texttt{following.type} and \texttt{sib.combined}), and  this needs
+to be corrected first.
+
+<<label=sib.dur.4.1>>=
+sib.dur.2.0 <- update(sib.dur.2, .~. + following.type + sib.combined)
+@
+<<label=sib.dur.4.2, echo=FALSE, results=tex>>=
+sib.dur.2.0 <- lmer(summary(sib.dur.2.0)$call$formula, dat2)
+pretty.summary.print(summary(sib.dur.2.0))
+cat("\\newline\\newline")
+@
+
+Interestingly, despite these terms not being selected by the step
+function, they are highly significant.
+
+<<label=sib.dur.4.3>>=
+sib.dur.2.1 <- update(sib.dur.2.0, . ~ . - prec.int25)
+@
+
+<<label=sib.dur.4.4, echo=FALSE, results=tex>>=
+print(xtable(anova(sib.dur.2.1, sib.dur.2.0)), table.position="h!")
+@
+
+Having \texttt{prec.int25} is no better than not having it in the model, so
+it is safe to drop the term.\newline
+
+<<label=sib.dur.4.3, echo=FALSE, results=tex>>=
+sib.dur.2.1 <- lmer(summary(sib.dur.2.1)$call$formula, dat2)
+pretty.summary.print(summary(sib.dur.2.1))
+@
+
+\subsubsection*{Comparing Grouping Structures}
+Now that the fixed effects that most contribute to the optimal model
+have been identified, the best random effects structure can be
+explored.  Up to now, the usual interpretation of word crossed with
+speaker has been used.  If, for example, there are speakers who tend
+to use more [s]'s than [z]'s, a nested structure
+where unique word:speaker combinations are considered instead of unique
+words may be better.\newline
+
+<<label=sib.dur.5, echo=FALSE, results=tex>>=
+sib.dur.3 <- update(sib.dur.2.1, . ~ . - (1|word) - (1|speaker) + (1|speaker/word))
+sib.dur.3 <- lmerTest::lmer(summary(sib.dur.3)$call$formula, dat2)
+pretty.summary.print(summary(sib.dur.3))
+cat("\\newline\\newline")
+@
+
+The significance of the coefficients did not change very much, but
+the nested model has more word-to-word variability and less residual
+token-to-token variability when compared to the crossed model.
+
+<<label=sib.dur.5.1, echo=FALSE, results=tex>>=
+a <- anova(sib.dur.2.1, sib.dur.3)
+rownames(a) <- c("Crossed", "Nested")
+print(xtable(a), table.position="h!")
+@
+
+The fit of the model with the nested structure is significantly better
+than the fit of the model with the crossed structure.
+
+\subsubsection*{Model Diagnostics}
+To verify that this model is appropriate, we need to check that the residuals
+are independent of each other and Normally distributed with a mean of
+zero (residuals being the difference between the predicted response
+and the actual response for every token).
+
+The assumption of Normality can be verified with a Quantile--Quantile
+Plot and independence and mean by plotting the
+residuals against their index (Figure \ref{fig:sib.dur.res}).  The
+residuals should form a straight line in the Normal Q--Q Plot, and
+they should be randomly scattered about zero (on the y-axis) in the Residual by Index Plot.
+
+<<label=sib.dur.res, echo=FALSE, include=FALSE>>=
+par(mfrow=c(1,2), mai=c(.75, .75, .5, 0), cex=.75, cex.main=1, cex.lab=1)
+qqPlot(residuals(sib.dur.3), main="Normal Q-Q", ylab="Residual")
+plot(1:length(residuals(sib.dur.3)), residuals(sib.dur.3),
+     xlab="Index", ylab="Residual", main="Residual by Index")
+abline(h=0, col="red", lwd=2)
+@
+
+\begin{figure}[h!]
+  \begin{center}
+    \begin{minipage}[t]{0.8\linewidth}
+      \begin{center}
+<<fig=TRUE, echo=FALSE, height=3.5>>=
+<<sib.dur.res>>
+@
+      \end{center}
+    \end{minipage}
+    \caption{Diagnostic Plots}
+    \label{fig:sib.dur.res}
+  \end{center}
+\end{figure}
+
+The slight curvature at the top of the Q--Q Plot, along with the
+slightly higher number of positive residuals at the top of the
+Residual by Index Plot show that there may be a slight right-skew in
+the residuals, but this is not enough to be troubling.
+
+\subsubsection*{Interpretation}
+This first caveat with interpreting this model is dealing with
+transformations that were used.  Several variables were centered and
+scaled (standardized), and the response was the natural logarithm of
+Sibilant Duration, not Sibilant Duration itself.  These
+transformations would be a complication if the model was intended for
+prediction. Fortunately, this study  only concerned with identifying
+relationships between these variables, and neither scaling the
+predictors nor log-transforming the response affect these
+interpretations.
+
+An increase or decrease in the logarithm of Sibilant Duration would also be an
+change of the same direction in Sibilant Duration, and the same holds true for scaling the
+independent variables.  A simple interpretation of
+variable coefficients for log-transformed responses is that  a
+one-unit change in the independent variable (with all others held
+constant) will result in a change in the dependent variable of
+$100\cdot($coefficient$)$\%.  Positive coefficients represent an
+increase in the response, and negative coefficients represent a decrease\footnote{
+  More accurately, for a coefficient $\hat{\beta}$, a one-unit change in the
+  independent variable $x$ multiplies the expected value of the response
+  by $e^{\hat{\beta}}$.  For small values of $\hat{\beta}$ like we
+  have here, the percent change is a useful approximation.
+}.
+
+For the scaled variables, a one-unit change is one standard deviation
+of that variable.  For the categorical variables, R chooses one level
+to be the base value, and the coefficients represent the change in the
+response when changing the level.
+
+It is also important to keep in mind with
+mixed effects models that the coefficients are the estimated average
+effect among all of the groups, so the p-values should not be treated
+as gospel.  A coefficient with a p-value of $0.06$ may be important to
+the model, and one with a coefficient of $0.04$ may not be all that important
+to the practical interpretation.  For now, the decision about whether to focus on
+coefficients that are close (on either side) to
+$0.05$ will be based on weighing how significant they are against
+their effect size.  For example, the interaction
+\texttt{prec.pitch50:prec.pitch05} is marginally significant, but
+its coefficient is only $0.007$, which represents a change in expected
+Sibilant Duration of only $0.7$\%.  This change may or may not be
+statistically significant, but, practically, that is not much of a
+difference.  The \texttt{following.typepause:sib.combined[z]}
+interaction could also go either way, but it represents a change of
+$8.1$\% in Sibilant Duration and is probably worth following up on.
+
+<<label=sib.dur.6, echo=FALSE, results=tex>>=
+print(xtable(summary(sib.dur.3)$coef,
+             caption="Coefficients of Final Sibilant Duration Model",
+             label="tab:sib.dur", digits=3), table.placement="h!")
+@
+
+Several conclusions can be drawn by examining the coefficients in this
+model (Table \ref{tab:sib.dur}):
+\begin{enumerate}
+  \item Increases in the covariates (the other responses) all result
+    in an increase in Sibilant Duration, particularly the duration of
+    the preceding segment.
+  \item As the age of the speaker increases, the Sibilant Duration
+    tends to decrease.
+  \item Duration is generally decreased for sibilants that are
+    traditionally pronounced as a [z] when compared to those that are
+    traditionally pronounced as an [s].
+  \item Sibilants that precede a pause are longer, on average, than
+    those that precede a consonant, but there is no significant
+    difference between sibilants that precede consonants when compared to vowels.
+  \item If the sibilant precedes a pause but is traditionally
+    pronounced as a [z], the following pause mitigates the decrease in
+    duration that is expected from the traditional pronunciation.
+\end{enumerate}
+
+These relationships can be easily visualized with parallel box plots:
+\vspace{-10pt}
+<<label=sib.dur.by.age, echo=FALSE, include=FALSE>>=
+par(mfrow=c(1,2), las=3, mai=c(1, 1, .25, .25), cex=.75, cex.main=1, cex.lab=1)
+with(dat2, boxplot(sib_dur ~ age_group,
+     ylab="Sibilant Duration", xlab="",
+     col=c("white", "cadetblue1", "cornflowerblue",
+     main="Sib. Duration by Age Group")))
+with(dat2, boxplot(log(sib_dur) ~ age_group,
+     ylab="Log(Sibilant Duration)", xlab="",
+     col=c("white", "cadetblue1", "cornflowerblue",
+     main="Log(Sib. Duration) by Age Group")))
+@
+\begin{figure}[h!]
+  \begin{center}
+    \begin{minipage}[t]{\linewidth}
+      \begin{center}
+<<fig=TRUE, echo=FALSE, height=3>>=
+<<sib.dur.by.age>>
+@
+      \end{center}
+    \end{minipage}
+    \caption{Sibilant Duration by Age Group}
+    \label{fig:sib.dur.by.age}
+  \end{center}
+\end{figure}
+
+While the difference between age groups is harder to see with the
+significant right skew in Sibilant Duration, it becomes more distinct with
+the log-transformation (Figure \ref{fig:sib.dur.by.age}).
+
+In Figure \ref{fig:sib.dur.by.sib}, The interaction between following
+segments and standard pronunciations is explored.
+For each type of following segment, [s]'s have longer durations than
+[z]'s.  Regardless of standard pronunciation, sibilants that precede
+pauses are longer than sibilants that precede vowels and consonants,
+and there is a lot more variability for these sibilants.  There is
+less of a difference (and more variability) between the standard
+pronunciations that precede  pauses than for segments that precede
+consonants or vowels, which is a good visualization of
+the interaction.
+
+
+<<label=sib.dur.by.sib, echo=FALSE, include=FALSE>>=
+par(mfrow=c(2,1), las=3, cex=.75, cex.main=1.25, cex.lab=1,
+    mai=c(1, 1, 1, 1))
+with(dat2, boxplot(sib_dur ~ sib.combined*following.type,
+                   ylab="Sibilant Duration",
+                   col=c("cornflowerblue", "brown3"),
+                   main="Sib. Duration by sib.combined:following.type"))
+with(dat2, boxplot(log(sib_dur) ~ sib.combined*following.type,
+                   ylab="Log(Sibilant Duration)",
+                   main="Log(Sib. Duration) by sib.combined:following.type",
+                   col=c("cornflowerblue", "brown3")))
+@
+\begin{figure}[h!]
+  \begin{center}
+    \begin{minipage}[t]{0.8\linewidth}
+      \begin{center}
+<<fig=TRUE, echo=FALSE, height=10>>=
+<<sib.dur.by.sib>>
+@
+      \end{center}
+    \end{minipage}
+    \caption{Sibilant Duration by Standard Pronunciation and Following Segment}
+    \label{fig:sib.dur.by.sib}
+  \end{center}
+\end{figure}
+
+<<label=sib.dur.int, echo=FALSE, include=FALSE>>=
+par(mfrow=c(2,1), las=3, cex=.75, cex.main=1, cex.lab=1,
+    mai=c(.5, 1, .5, .5), lwd=2)
+interaction.plot(dat2$sib.combined, dat2$following.type, dat2$sib_dur,
+                 lwd=2, col=c("darkorchid1", "blue", "red"),
+                 xlab="",
+                 ylab="Mean Sibilant Duration",
+                 main="Interaction of Sib. Duration by\nsib.combined:following.type",
+                 trace.label="Following Seg.", xpd=TRUE)
+interaction.plot(dat2$sib.combined, dat2$following.type, log(dat2$sib_dur),
+                 lwd=2, col=c("darkorchid1", "blue", "red"),
+                 xlab="",
+                 ylab="Mean Log(Sibilant Duration)",
+                 main="Interaction of Log(Sib. Duration) by\nsib.combined:following.type",
+                 trace.label="Following Seg.", xpd=TRUE)
+@
+\begin{figure}[h!]
+  \begin{center}
+    \begin{minipage}[t]{\linewidth}
+      \begin{center}
+<<fig=TRUE, echo=FALSE, height=7>>=
+<<sib.dur.int>>
+@
+      \end{center}
+    \end{minipage}
+    \caption{Interaction Profiles of Sibilant Duration by\\ Standard Pronunciation
+      and Following Segment}
+    \label{fig:sib.dur.int}
+  \end{center}
+\end{figure}
+Another visual representation of the interaction is, as its name would
+suggest, the Interaction Profile Plot (Figure \ref{fig:sib.dur.int}).  Here,
+each line represents the drop in the mean of
+Sibilant Duration from [s] to [z] for each of the following segment
+types.  Since Sibilant Duration is not significantly different for
+following consonants and vowels, the lines overlap, and for
+following pauses the line is  much higher.  The interactions are evident
+by the different slopes of the lines, with the slope for
+following pauses being shallower than the slope for following consonants
+(while there is an interaction for vowels, it is insignificant in the
+model).
+\newpage
+For all of these plots, the differences between groups, while they
+exist in the untransformed data, become more
+distinct when the log-transformation is used.  This is a good demonstration
+of the transformation's utility when working with highly skewed data.
+
+\subsection*{Preceding Segment Duration}
+\addcontentsline{toc}{subsection}{Preceding Segment Duration}
+Preceding Segment Duration will be modeled using a Gamma Generalized Linear
+Mixed Model.
+
+\subsection*{Center of Gravity}
+\addcontentsline{toc}{subsection}{Center of Gravity}
+Center of Gravity will be modeled using a Linear Mixed Model with no
+transformation.  Again, the filtered middle 60\% is the best measure
+to use.
+
+\subsection*{Percent Voicelessness}
+\addcontentsline{toc}{subsection}{Percent Voicelessness}
+The best model for Percent Voicelessness still needs to be explored
+further.  There are packages that implement Multilevel Beta Regression
+in CRAN which are worth looking at.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+\begin{center} {\bf\huge Appendices} \end{center}
+\renewcommand{\thesection}{A.\arabic{section}}
+\setcounter{section}{0}
+\setcounter{page}{1}
+\pagenumbering{roman}
+\addcontentsline{toc}{section}{Appendices}
+\section{ Variable Definitions}
+\label{a:vardef}
+\LTXtable{\linewidth}{table.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{ Code}
+\renewcommand{\thesubsection}{\thesection.\alph{subsection}}
+\subsection{ Data Shaping}
+<<echo=FALSE, eval=TRUE>>=
+source("data.R", echo=TRUE, print.eval=TRUE, max.deparse.length=500)
+@
+
+\subsection{ Independant Variable Plots}
+\setlength{\parindent}{0pt}
+Figure \ref{fig:token_count} (page \pageref{fig:token_count}):
+<<echo=TRUE, eval=FALSE>>=
+<<token_count>>
+@
+
+Figure \ref{fig:social_by_token} (page \pageref{fig:social_by_token}):
+<<echo=TRUE, eval=FALSE>>=
+<<soc.tok>>
+@
+
+Figure \ref{fig:social_by_speaker} (page \pageref{fig:social_by_speaker}):
+<<echo=TRUE, eval=FALSE>>=
+<<soc.speaker>>
+@
+
+Figure \ref{fig:age_by_speaker} (page \pageref{fig:age_by_speaker}):
+<<echo=TRUE, eval=FALSE>>=
+<<age_by_speaker>>
+@
+
+Figure \ref{fig:morpho} (page \pageref{fig:morpho}):
+<<echo=TRUE, eval=FALSE>>=
+<<morpho>>
+<<sib.loc>>
+@
+
+
+Figure \ref{fig:phono} (page \pageref{fig:phono}):
+<<echo=TRUE, eval=FALSE>>=
+<<phono>>
+@
+
+Figure \ref{fig:sib.intensity} (page \pageref{fig:sib.intensity}):
+<<echo=TRUE, eval=FALSE>>=
+<<sib.intensity>>
+@
+
+Figure \ref{fig:prec.intensity} (page \pageref{fig:prec.intensity}):
+<<echo=TRUE, eval=FALSE>>=
+<<prec.intensity>>
+@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{ Dependant Variable Plots}
+Figure \ref{fig:sib_dur_hist} (page \pageref{fig:sib_dur_hist}):
+<<echo=TRUE, eval=FALSE>>=
+<<sib_dur_hist>>
+@
+
+Figure \ref{fig:sib_dur_qq} (page \pageref{fig:sib_dur_qq}):
+<<echo=TRUE, eval=FALSE>>=
+<<sib_dur_qq>>
+@
+
+Figure \ref{fig:prec_dur_hist} (page \pageref{fig:prec_dur_hist}):
+<<echo=TRUE, eval=FALSE>>=
+<<prec_dur_hist>>
+@
+
+Figure \ref{fig:prec_dur_qq} (page \pageref{fig:prec_dur_qq}):
+<<echo=TRUE, eval=FALSE>>=
+<<prec_dur_qq>>
+@
+
+Figure \ref{fig:cog_hist} (page \pageref{fig:cog_hist}):
+<<echo=TRUE, eval=FALSE>>=
+<<cog_hist>>
+@
+
+Figure \ref{fig:cog_qq} (page \pageref{fig:cog_qq}):
+<<echo=TRUE, eval=FALSE>>=
+<<cog_qq>>
+@
+
+Figure \ref{fig:vls_hist} (page \pageref{fig:vls_hist}):
+<<echo=TRUE, eval=FALSE>>=
+<<vls_hist>>
+@
+
+Figure \ref{fig:vls_qq} (page \pageref{fig:vls_qq}):
+<<echo=TRUE, eval=FALSE>>=
+<<vls_qq>>
+@
+
+\subsection{ Analysis}
+\renewcommand{\thesubsubsection}{\thesubsection.\roman{subsubsection}}
+\subsubsection{ Sibilant Duration}
+<<echo=TRUE, eval=FALSE, stip.white=false>>=
+######### Define a print function for model summaries that
+######### typesets things better
+<<pretty.print>>
+
+######### Rename and subset data better for analysis
+######### & create the basis model
+<<sib.dur.0>>
+
+######### Get things prepped for step function & use it for low level vars.
+<<sib.dur.1>>
+
+######### add pitch05, check fit, & print new coef tab
+<<sib.dur.2>>
+<<sib.dur.3>>
+<<sib.dur.3.1>>
+
+######### Start selecting high level terms
+<<sib.dur.4>>
+
+#### Manually add following.type
+<<sib.dur.4.1>>
+
+#### Manually drop prec.int25, verify, & print new coef tab
+<<sib.dur.4.2>>
+<<sib.dur.4.3>>
+
+######## Compare grouping strategies
+<<sib.dur.5>>
+<<sib.dur.5.1>>
+
+######## Get a pretty coefficient table for reference
+<<sib.dur.6>>
+@
+{\bf Exploratory Plots}\\
+Figure \ref{fig:sib.dur.res} (page \pageref{fig:sib.dur.res}):
+<<echo=TRUE, eval=FALSE>>=
+<<sib.dur.res>>
+@
+
+Figure \ref{fig:sib.dur.by.age} (page \pageref{fig:sib.dur.by.age}):
+<<echo=TRUE, eval=FALSE>>=
+<<sib.dur.by.age>>
+@
+
+Figure \ref{fig:sib.dur.by.sib} (page \pageref{fig:sib.dur.by.sib}):
+<<echo=TRUE, eval=FALSE>>=
+<<sib.dur.by.sib>>
+@
+
+Figure \ref{fig:sib.dur.int} (page \pageref{fig:sib.dur.int}):
+<<echo=TRUE, eval=FALSE>>=
+<<sib.dur.int>>
+@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{ Word Frequencies}
+\label{a:res}
+<<echo=TRUE, eval=TRUE, fig=FALSE>>=
+<<random.effect.groups.0>>
+@
+\begin{center}
+  \begin{minipage}[t]{\linewidth}
+    \begin{center}
+<<echo=TRUE, eval=TRUE, fig=TRUE, height=3>>=
+<<random.effect.groups>>
+@
+    \end{center}
+  \end{minipage}
+\end{center}
+<<echo=TRUE, eval=TRUE>>=
+<<random.effect.groups.2>>
+@
+
+\end{document}
